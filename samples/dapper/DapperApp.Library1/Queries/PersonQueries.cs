@@ -54,5 +54,25 @@ namespace DapperApp.Library1.Queries
                 connection.Execute("delete from Persons where Id = @id", new { id });
             });
         }
+        public void UpdatePerson(Person person)
+        {
+            RunCommand((connection) =>
+            {
+                connection.Execute("UPDATE Persons SET Name=@Name,SurName=@Surname Where Id=@Id", person);
+            });
+
+
+
+        }
+
+        public List<Person> Filter(string filter)
+        {
+            List<Person> persons = null;
+            RunCommand((connection) =>
+            {
+                persons = connection.Query<Person>("select * from Persons  where Name LIKE CONCAT('%',@name,'%')", new { @name = filter }).ToList();
+            });
+            return persons;
+        }
     }
 }
